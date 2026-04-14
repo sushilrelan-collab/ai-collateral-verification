@@ -34,6 +34,14 @@ declared_stock = st.number_input(
 
 
 
+# ---- SESSION STATE INITIALIZATION ----
+
+if "estimated_stock" not in st.session_state:
+
+    st.session_state.estimated_stock = None
+
+
+
 if uploaded_file:
 
     image = Image.open(uploaded_file)
@@ -42,19 +50,29 @@ if uploaded_file:
 
 
 
-    estimated_stock = int(np.random.normal(declared_stock, 50))
+    # ✅ Generate AI output only ONCE
+
+    if st.session_state.estimated_stock is None:
+
+        st.session_state.estimated_stock = int(
+
+            np.random.normal(declared_stock, 50)
+
+        )
+
+
+
+    estimated_stock = st.session_state.estimated_stock
 
     variance = estimated_stock - declared_stock
 
 
 
-    if declared_stock > 0:
+    variance_percent = (
 
-        variance_percent = (variance / declared_stock) * 100
+        (variance / declared_stock) * 100 if declared_stock > 0 else 0
 
-    else:
-
-        variance_percent = 0
+    )
 
 
 
@@ -76,6 +94,8 @@ if uploaded_file:
 
     col1, col2, col3 = st.columns(3)
 
+
+
     col1.metric("Estimated Stock (MT)", estimated_stock)
 
     col2.metric("Variance (MT)", variance)
@@ -96,11 +116,7 @@ if uploaded_file:
 
     chart_data = pd.DataFrame(
 
-        {
-
-            "Stock (MT)": [declared_stock, estimated_stock]
-
-        },
+        {"Stock (MT)": [declared_stock, estimated_stock]},
 
         index=["Declared", "Estimated"]
 
@@ -125,6 +141,8 @@ if uploaded_file:
     else:
 
         st.success("Stock levels are within acceptable limits.")
+
+
 
 else:
 
