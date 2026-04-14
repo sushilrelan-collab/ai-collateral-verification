@@ -14,7 +14,8 @@ uploaded_file = st.file_uploader("Upload Warehouse Image", type=["jpg", "png"])
 
 declared_stock = st.number_input("Enter Declared Stock (MT)", min_value=0, value=1000)
 
-if uploaded_file:
+if uploaded_file: is indented by 4 spaces
+Do not remove indentation
 image = Image.open(uploaded_file)
 st.image(image, caption="Uploaded Image", use_column_width=True)
 
