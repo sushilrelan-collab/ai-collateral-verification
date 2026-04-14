@@ -2,9 +2,9 @@ import streamlit as st
 
 import numpy as np
 
-import matplotlib.pyplot as plt
-
 from PIL import Image
+
+import pandas as pd
 
 
 
@@ -76,8 +76,6 @@ if uploaded_file:
 
     col1, col2, col3 = st.columns(3)
 
-
-
     col1.metric("Estimated Stock (MT)", estimated_stock)
 
     col2.metric("Variance (MT)", variance)
@@ -92,21 +90,25 @@ if uploaded_file:
 
 
 
-    st.subheader("📈 Declared vs Estimated Stock")
+    st.subheader("📈 Stock Comparison")
 
 
 
-    fig, ax = plt.subplots()
+    chart_data = pd.DataFrame(
 
-    ax.bar(["Declared", "Estimated"], [declared_stock, estimated_stock])
+        {
 
-    ax.set_ylabel("Stock (MT)")
+            "Stock (MT)": [declared_stock, estimated_stock]
 
-    ax.set_title("Stock Comparison")
+        },
+
+        index=["Declared", "Estimated"]
+
+    )
 
 
 
-    st.pyplot(fig)
+    st.bar_chart(chart_data)
 
 
 
